@@ -93,3 +93,26 @@
  "force-line-length strips existing newlines"
  (force-line-length 5 "hi\n new\nlines\n\n\n")
  => "hi ne\nwline\ns")
+
+(defn repeat-horizontally
+  "Repeats each line of a string a number of times, 
+  but not the newlines, so that the string is echoed 
+  horizontally.
+
+  Usage example:
+
+  (repeat-horizontally 2 \"abc\\n123\\n\") 
+  => \"abcabc\\n123123\\n\""
+  [times s]
+  (apply str
+         (mapcat #(apply str (concat (repeat times %) "\n"))
+                 (clojure.string/split s #"\n"))))
+
+(midje/fact
+ "repeat-horizontally repeats up to each newline"
+ (repeat-horizontally 2 "abc\n123\n")
+ => "abcabc\n123123\n"
+ (repeat-horizontally 3 "abc\n123\n")
+ => "abcabcabc\n123123123\n"
+ (repeat-horizontally 2 "this is a \ntest and example..\n")
+ => "this is a this is a \ntest and example..test and example..\n")
